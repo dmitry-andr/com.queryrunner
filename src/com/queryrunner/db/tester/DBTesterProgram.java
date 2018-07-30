@@ -1,9 +1,8 @@
 package com.queryrunner.db.tester;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import com.queryrunner.db.processor.QueryRunner;
 import com.queryrunner.db.processor.SelectQueryOutput;
+import com.queryrunner.db.tester.utils.AppParams;
 import com.queryrunner.db.tester.utils.Utils;
 
 public class DBTesterProgram {
@@ -11,6 +10,8 @@ public class DBTesterProgram {
 	public static void main(String[] args) {
 
 		System.out.println("Main program launched");
+		
+		
 		
 		
 		SelectQueryOutput selectOutput = null;
@@ -27,7 +28,7 @@ public class DBTesterProgram {
 		System.out.println("Reading DB jobs");
 		DataTest[] jobs = null;
 		
-		String[] jobFilesInSuite = Utils.filesInDBJobsSuite();
+		String[] jobFilesInSuite = Utils.filesInFolder(AppParams.DB_JOBS_DIRECTORY);
 				
 		if(jobFilesInSuite.length >= 1) {
 			jobs = new DataTest[jobFilesInSuite.length];

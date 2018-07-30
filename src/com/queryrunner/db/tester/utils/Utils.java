@@ -56,11 +56,11 @@ public class Utils {
 		return properties;
 	}
 	
-	public static String[] filesInDBJobsSuite() {
+	public static String[] filesInFolder(String folderNameRelativeToAppRoot) {
 		String[] filesInTest = null;
 		
 		// create a file that is really a directory
-	    File testsDirectory = new File(AppParams.DB_JOBS_DIRECTORY);
+	    File testsDirectory = new File(folderNameRelativeToAppRoot);
 
 	    // get a listing of all files in the directory
 	    String[] filesInDir = testsDirectory.list();
@@ -72,12 +72,12 @@ public class Utils {
 	    	filesInTest = new String[filesInDir.length];
 	    	for ( int i=0; i<filesInDir.length; i++ )
 		    {
-		      System.out.println( "Test scenario added : " + filesInDir[i] );
+		      System.out.println( "Filename added : " + filesInDir[i] );
 		      filesInTest[i] = filesInDir[i];
 		    }
 	    	
 	    }else {
-	    	System.out.println( "[ERROR] : \"" + AppParams.DB_JOBS_DIRECTORY +"\" directory is empty or doesn't exsist!!!!!");
+	    	System.out.println( "[ERROR!!!] : \"" + folderNameRelativeToAppRoot +"\" directory is empty or doesn't exsist!!!!!");
 	    }
 
 		return filesInTest;
