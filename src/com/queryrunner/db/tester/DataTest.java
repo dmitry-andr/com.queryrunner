@@ -10,7 +10,8 @@ public class DataTest {
 	ArrayList<String> headerKeys;//used for describing column names in DB and to understand result set size
 	
 	private Date executionDate;
-	private int executionTimeInSec;
+	private long executionTimeInSec;
+	private int status = -1;//negative by default, changed to 1 in case of success or according error code
 	
 	
 	
@@ -60,12 +61,12 @@ public class DataTest {
 	}
 
 
-	public int getExecutionTimeInSec() {
+	public long getExecutionTimeInSec() {
 		return executionTimeInSec;
 	}
 
 
-	public void setExecutionTimeInSec(int executionTimeInSec) {
+	public void setExecutionTimeInSec(long executionTimeInSec) {
 		this.executionTimeInSec = executionTimeInSec;
 	}
 
@@ -87,6 +88,16 @@ public class DataTest {
 
 	public ArrayList<String> getHeaderKeys() {
 		return headerKeys;
+	}
+
+
+	public int getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	
 }

@@ -2,20 +2,29 @@ package com.queryrunner.db.processor;
 
 import java.util.ArrayList;
 
-public class SelectQueryOutput {
+import com.queryrunner.db.tester.utils.AppParams;
+
+public class DBQueryOutput {
+	private String jobId;
 	private ArrayList<String> headerItems;
-	private ArrayList<String> rows;//rows are comma separated values
+	private ArrayList<String> rows;//rows are strings with values separated by symbol defined by App constant QUERY_OUTPUT_ROW_VALUES_SEPARATOR
 	
-	public SelectQueryOutput(ArrayList<String> headerItems) {
+	public DBQueryOutput(String jobId, ArrayList<String> headerItems) {
 		super();
+		this.jobId = jobId;
 		this.headerItems = headerItems;
 		rows = new ArrayList<String>();
+	}
+	
+	@SuppressWarnings("unused")
+	private DBQueryOutput() {
+		super();
 	}
 	
 	
 	
 	public void printOutputToConsole(int limit) {
-		System.out.println("\n>>>Select query output");
+		System.out.println("\n>>>DB query output");
 		System.out.println("Output records number : " + this.rows.size());
 		System.out.println("Displaying first : " + limit);
 		System.out.println("*********************************************");
@@ -25,12 +34,18 @@ public class SelectQueryOutput {
 		}
 		System.out.println();
 		for (String row: this.getRows()) {
-		    System.out.println(rowsCounter + " # " + row);
+			String[] rowItems = row.split(AppParams.QUERY_OUTPUT_ROW_VALUES_SEPARATOR);
+		    System.out.print(rowsCounter + " # ");
+		    for(String rowItem : rowItems) {
+		    	System.out.print(rowItem + " | ");
+		    }
+		    System.out.println("");
 		    rowsCounter++;
 		    if(rowsCounter > limit) {
 		    	break;
 		    }
 		}
+		System.out.println("*********************************************");
 		
 	}
 	
@@ -44,5 +59,11 @@ public class SelectQueryOutput {
 	public ArrayList<String> getRows() {
 		return rows;
 	}
+
+	public String getJobId() {
+		return jobId;
+	}
+	
+	
 	
 }

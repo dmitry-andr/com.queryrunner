@@ -2,13 +2,16 @@ package com.queryrunner.db.tester.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.queryrunner.db.processor.DBQueryOutput;
 import com.queryrunner.db.tester.DataTest;
 
 public class Utils {
@@ -109,9 +112,6 @@ public class Utils {
 				}
 			}
 			
-			
-			
-			
 			String jobConfigurationOutputHeader = prop.getProperty(AppParams.DB_JOB_OUTPUT_HEADER);
 			ArrayList<String> jobHeaderItems = null;
 			if((jobConfigurationOutputHeader != null) && (jobConfigurationOutputHeader.length() > 0)) {
@@ -121,9 +121,6 @@ public class Utils {
 					jobHeaderItems.add(headerItem.trim());
 				}
 			}
-			
-			
-			
 			
 			job = new DataTest(jobId, jobQuery, jobQueryParams, jobHeaderItems);
 			
@@ -141,5 +138,60 @@ public class Utils {
 		}
 		
 		return job;
+	}
+	
+	public static int writeOutputToCSV(DBQueryOutput output) {
+		
+		//Checking if output directory exists
+		File file = new File(AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY);
+        if (!file.exists()) {
+            if (file.mkdir()) {
+                System.out.println(AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY + " - directory is created!");
+            } else {
+                System.out.println("[ERROR !!!] : Failed to create directory! - " + AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY);
+                return -1;
+            }
+        }
+        
+        PrintWriter pw;
+		try {
+			pw = new PrintWriter(new File(AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY + "/" + output.getJobId() + ".csv"));
+	        StringBuilder sb = new StringBuilder();
+	        //CSV header
+	        for(int k = 0; k < output.getHeaderItems().size(); k++) {
+	        	sb.append(output.getHeaderItems().get(k));
+	        	if(k < (output.getHeaderItems().size() - 1)) {
+	        		sb.append(',');
+	        	}
+	        }
+	        sb.append('\n');
+	        
+	        //Values
+	        for(int i = 0; i < output.getRows().size(); i++) {
+	        	String[] rowItems = output.getRows().get(i).split(AppParams.QUERY_OUTPUT_ROW_VALUES_SEPARATOR);
+	        	for(int j = 0; j < rowItems.length; j++) {
+	        		rowItems[j] = rowItems[j].replace(",", AppParams.QUERY_OUTPUT_ROW_COMMA_SYMBOL_IN_TEXT_REPLACEMENT);//replacing possible commas in text to ensure CSV file consistency
+	        		sb.append(rowItems[j]);
+	        		
+	        		if(j < (rowItems.length - 1)) {
+		        		sb.append(',');
+	        		}
+	        	}
+	        	
+	        	if(i < (output.getRows().size() - 1)) {
+	        		sb.append('\n');
+	        	}
+	        	
+	        }
+	        
+	        pw.write(sb.toString());
+	        
+	        pw.close();        
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+        
+		
+		return 1;
 	}
 }

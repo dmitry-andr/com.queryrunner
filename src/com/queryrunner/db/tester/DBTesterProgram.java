@@ -1,7 +1,10 @@
 package com.queryrunner.db.tester;
 
 import com.queryrunner.db.processor.QueryRunner;
-import com.queryrunner.db.processor.SelectQueryOutput;
+
+import java.text.SimpleDateFormat;
+
+import com.queryrunner.db.processor.DBQueryOutput;
 import com.queryrunner.db.tester.utils.AppParams;
 import com.queryrunner.db.tester.utils.Utils;
 
@@ -13,8 +16,7 @@ public class DBTesterProgram {
 		
 		
 		
-		
-		SelectQueryOutput selectOutput = null;
+		DBQueryOutput selectOutput = null;
 		
 /*
 		String queryWithParam = "SELECT * FROM sakila.city WHERE sakila.city.city = ?";
@@ -45,14 +47,18 @@ public class DBTesterProgram {
 		System.out.println("Starting DB jobs execution");
 		for(int j = 0; j < jobs.length; j++) {
 			System.out.println(">>>START Job#" + (j +1));
-			System.out.println("Job Settings\n");
+			System.out.println("Job Settings");
 			System.out.println(jobs[j].toString());
-			System.out.println("Job Run\n");
+			System.out.println("Job Run");
 			
 			
 			
-			selectOutput = QueryRunner.executeSelectQueryWithParams(jobs[j].getQuery(), jobs[j].getQueryParams(), jobs[j].getHeaderKeys());
+			selectOutput = QueryRunner.executeQueryWithParams(jobs[j]);			
 			selectOutput.printOutputToConsole(10);
+
+			System.out.println("Job executed on :" + (new SimpleDateFormat(AppParams.DB_JOB_EXECUTION_DATE_FORMAT).format(jobs[j].getExecutionDate())) + 
+					" ; Execution time in Sec : " + jobs[j].getExecutionTimeInSec() + "\n");
+			System.out.println("Writing Job Run to CSV, Status : " + Utils.writeOutputToCSV(selectOutput) + "\n");
 			
 			
 			
