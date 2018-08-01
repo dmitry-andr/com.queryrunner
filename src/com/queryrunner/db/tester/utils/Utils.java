@@ -3,10 +3,13 @@ package com.queryrunner.db.tester.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -16,7 +19,18 @@ import com.queryrunner.db.tester.DataTest;
 
 public class Utils {
 	
+	private static String timestampForOutputArtifacts = null;
+	
 	private static Map<String, String> dbConnectionProperties = null;
+	
+	private static String getTimestamp() {
+		if(timestampForOutputArtifacts != null) {
+			return timestampForOutputArtifacts;
+		}else {
+			timestampForOutputArtifacts = (new SimpleDateFormat(AppParams.DB_JOB_EXECUTION_DATE_FORMAT).format(new Date()));
+			return timestampForOutputArtifacts;
+		}
+	}
 	
 	public static Map<String, String> getDBConnProps(){
 		if(dbConnectionProperties != null) {
@@ -143,19 +157,20 @@ public class Utils {
 	public static int writeOutputToCSV(DBQueryOutput output) {
 		
 		//Checking if output directory exists
-		File file = new File(AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY);
+		String outputDirectory = AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY  + "\\" + getTimestamp() + "_csv_files";
+		File file = new File(outputDirectory);
         if (!file.exists()) {
-            if (file.mkdir()) {
-                System.out.println(AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY + " - directory is created!");
+            if (file.mkdirs()) {
+                System.out.println(outputDirectory + " - directory is created!");
             } else {
-                System.out.println("[ERROR !!!] : Failed to create directory! - " + AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY);
+                System.out.println("[ERROR !!!] : Failed to create directory! - " + outputDirectory);
                 return -1;
             }
         }
         
-        PrintWriter pw;
+        PrintWriter csvFileWriter;
 		try {
-			pw = new PrintWriter(new File(AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY + "/" + output.getJobId() + ".csv"));
+			csvFileWriter = new PrintWriter(new File(outputDirectory + "/" + output.getJobId() + ".csv"));
 	        StringBuilder sb = new StringBuilder();
 	        //CSV header
 	        for(int k = 0; k < output.getHeaderItems().size(); k++) {
@@ -181,17 +196,91 @@ public class Utils {
 	        	if(i < (output.getRows().size() - 1)) {
 	        		sb.append('\n');
 	        	}
-	        	
 	        }
 	        
-	        pw.write(sb.toString());
+	        csvFileWriter.write(sb.toString());
 	        
-	        pw.close();        
+	        csvFileWriter.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
         
-		
 		return 1;
 	}
+	
+	public static int updateSuiteExecutionCSVReport(DataTest job) {
+		int status = 1;
+		String fileNameWithPath = AppParams.DB_JOB_CSV_OUTPUT_DIRECTORY  + "\\" + getTimestamp() + "_" + AppParams.EXECUTION_REPORT_CSV_FILE_NAME;
+		File csvExecutionReport = new File(fileNameWithPath);
+		  if(csvExecutionReport.exists()){
+			  try {
+				FileWriter pw = new FileWriter(fileNameWithPath, true);
+				StringBuilder sb = new StringBuilder();
+				
+				//add row with data
+				sb.append(buildExecutionReportDataRow(job));
+				
+				pw.write(sb.toString());
+		        
+				pw.close();				
+			} catch (IOException e) {
+				status = -1;
+				e.printStackTrace();
+			}
+		  }else{
+			  try {
+				PrintWriter csvWriter = new PrintWriter(new File(fileNameWithPath));
+				StringBuilder sb = new StringBuilder();
+				//adding header
+				String[] columns = AppParams.EXECUTION_REPORT_CSV_FILE_COLUMNS.split(",");
+				for(int k = 0; k < columns.length; k++) {
+					sb.append(columns[k]);
+					if(k < (columns.length - 1)) {
+						sb.append(",");
+					}
+				}
+				//add row with data
+				sb.append(buildExecutionReportDataRow(job));
+				
+				csvWriter.write(sb.toString());
+		        
+				csvWriter.close();				
+			} catch (FileNotFoundException e) {
+				status = -2;
+				e.printStackTrace();
+			}
+		  }
+		
+		return status;
+	}
+	
+	private static String buildExecutionReportDataRow(DataTest job) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\n");
+		sb.append("");//"No" counter not implemented
+		sb.append(",");
+		sb.append(job.getId());
+		sb.append(",");
+		
+		//SQL prams
+		if(job.getQueryParams() != null) {
+			for(int i = 0; i < job.getQueryParams().size(); i++) {
+				sb.append(job.getQueryParams().get(i));
+				if(i < (job.getQueryParams().size() - 1)) {
+					sb.append(AppParams.EXECUTION_REPORT_CSV_SQL_PRAMS_VALUES_SPERATOR);
+				}
+			}
+		}else {
+			//adding empty cell as no SQL parameters defined
+			sb.append("");
+		}
+		sb.append(",");
+		
+		sb.append(job.getExecutionTimeInSec());
+		sb.append(",");
+		sb.append(job.getStatus());
+		
+		return sb.toString();
+	}
+	
 }

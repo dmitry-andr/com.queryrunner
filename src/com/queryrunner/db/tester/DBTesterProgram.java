@@ -58,7 +58,8 @@ public class DBTesterProgram {
 
 			System.out.println("Job executed on :" + (new SimpleDateFormat(AppParams.DB_JOB_EXECUTION_DATE_FORMAT).format(jobs[j].getExecutionDate())) + 
 					" ; Execution time in Sec : " + jobs[j].getExecutionTimeInSec() + "\n");
-			System.out.println("Writing Job Run to CSV, Status : " + Utils.writeOutputToCSV(selectOutput) + "\n");
+			System.out.println("Writing Job Data output to CSV, Status : " + Utils.writeOutputToCSV(selectOutput) + "\n");
+			System.out.println("Job execution status wirting to CSV, Status : " + Utils.updateSuiteExecutionCSVReport(jobs[j]) + "\n");
 			
 			
 			

@@ -14,11 +14,17 @@ public class AppParams {
 	public static final String DB_JOB_QUERY_PARAMS = "db_job_query_params";
 	public static final String DB_JOB_OUTPUT_HEADER = "db_job_output_header";
 	public static final String DB_JOB_CSV_OUTPUT_DIRECTORY = "csv_output";
-	public static final String DB_JOB_EXECUTION_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
+	public static final String DB_JOB_EXECUTION_DATE_FORMAT = "yyyy_MM_dd_'at'_HH_mm_ss";
 	
 	
 	public static final String QUERY_OUTPUT_ROW_VALUES_SEPARATOR = "%sep%";
 	public static final String QUERY_OUTPUT_ROW_COMMA_SYMBOL_IN_TEXT_REPLACEMENT = "&commaSymbol&";
+	
+	
+	
+	public static final String EXECUTION_REPORT_CSV_FILE_NAME = "a_suite_execution_report.csv";
+	public static final String EXECUTION_REPORT_CSV_FILE_COLUMNS = "No,JobID,SQL Prams Values(| separated),Execution Time(sec),Status";
+	public static final String EXECUTION_REPORT_CSV_SQL_PRAMS_VALUES_SPERATOR = "|";
 	
 	
 	
