@@ -22,8 +22,8 @@ public class AppParams {
 	
 	
 	
-	public static final String EXECUTION_REPORT_CSV_FILE_NAME = "a_suite_execution_report.csv";
-	public static final String EXECUTION_REPORT_CSV_FILE_COLUMNS = "No,JobID,SQL Prams Values(| separated),Execution Time(sec),Status";
+	public static final String EXECUTION_REPORT_CSV_FILE_NAME = "suite_execution_report.csv";
+	public static final String EXECUTION_REPORT_CSV_FILE_COLUMNS = "No,JobID,SQL Prams Values(| separated),Execution Time(sec),Status,Result size(cols x rows), Error msgs(if any)";
 	public static final String EXECUTION_REPORT_CSV_SQL_PRAMS_VALUES_SPERATOR = "|";
 	
 	

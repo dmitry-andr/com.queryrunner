@@ -46,9 +46,13 @@ public class QueryRunner {
 				}
 				
 				result.addRow(stringSeparatedRow.toString());
+				long endTimeInMillis = System.currentTimeMillis();
+				dbJob.setExecutionTimeInSec((endTimeInMillis - startTimeInMillis)/1000);
+				dbJob.setStatus(1);
 			}			
 		}catch (Exception e) {
 			dbJob.setStatus(-2);
+			dbJob.setErrorShortText(e.getMessage());
 			e.printStackTrace();
 		}finally {
 			if(connection != null) {
@@ -56,14 +60,12 @@ public class QueryRunner {
 					connection.close();
 				} catch (SQLException e) {
 					dbJob.setStatus(-3);
+					dbJob.setErrorShortText(e.getMessage());
 					e.printStackTrace();
 				}
 			}
 		}
 		
-		long endTimeInMillis = System.currentTimeMillis();
-		dbJob.setExecutionTimeInSec((endTimeInMillis - startTimeInMillis)/1000);
-		dbJob.setStatus(1);
 		return result;
 	}
 }

@@ -12,6 +12,8 @@ public class DataTest {
 	private Date executionDate;
 	private long executionTimeInSec;
 	private int status = -1;//negative by default, changed to 1 in case of success or according error code
+	private int rowsReturnedCount = 0;
+	private String errorShortText = "";
 	
 	
 	
@@ -28,7 +30,14 @@ public class DataTest {
 	public String toString() {
 		StringBuilder output = new StringBuilder();
 		output.append("ID : " + this.id + "\n");
-		output.append("Query : " + this.query + "\n");
+		
+		int queryLengthLimit = 300;
+		if(this.query.length() > queryLengthLimit) {
+			output.append("Query : " + this.query.substring(0, queryLengthLimit) + ".....\n");
+		}else {
+			output.append("Query : " + this.query + "\n");
+		}
+		
 		if(this.queryParams != null){
 			for(String param : this.queryParams){
 				output.append("---param : " + param + "\n");
@@ -99,5 +108,26 @@ public class DataTest {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+
+
+	public int getRowsReturnedCount() {
+		return rowsReturnedCount;
+	}
+
+
+	public void setRowsReturnedCount(int rowsReturnedCount) {
+		this.rowsReturnedCount = rowsReturnedCount;
+	}
+
+
+	public String getErrorShortText() {
+		return errorShortText;
+	}
+
+
+	public void setErrorShortText(String errorShortText) {
+		this.errorShortText = errorShortText;
+	}
+	
 	
 }

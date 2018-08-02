@@ -12,21 +12,13 @@ public class DBTesterProgram {
 
 	public static void main(String[] args) {
 
-		System.out.println("Main program launched");
-		
-		
-		
-		DBQueryOutput selectOutput = null;
-		
-/*
-		String queryWithParam = "SELECT * FROM sakila.city WHERE sakila.city.city = ?";
-		ArrayList<String> queryParams = new ArrayList<String>(Arrays.asList("Aden"));
-		ArrayList<String> headerKeys = new ArrayList<String>(Arrays.asList("city_id", "city", "country_id", "last_update"));
-		selectOutput = QueryRunner.executeSelectQueryWithParams(queryWithParam, queryParams, headerKeys);
-		selectOutput.printOutputToConsole(10);
-*/
-		
+		System.out.println("Data extraction utility launched");
 		System.out.println("********************************************************\n");
+		
+		
+		DBQueryOutput dqQueryRunOutput = null;
+				
+		
 		System.out.println("Reading DB jobs");
 		DataTest[] jobs = null;
 		
@@ -46,22 +38,21 @@ public class DBTesterProgram {
 		
 		System.out.println("Starting DB jobs execution");
 		for(int j = 0; j < jobs.length; j++) {
-			System.out.println(">>>START Job#" + (j +1));
+			System.out.println(">>>START Job#" + (j +1) + " (of " + jobFilesInSuite.length + ")");
 			System.out.println("Job Settings");
 			System.out.println(jobs[j].toString());
 			System.out.println("Job Run");
 			
+			dqQueryRunOutput = QueryRunner.executeQueryWithParams(jobs[j]);
+			if(dqQueryRunOutput !=  null) {
+				dqQueryRunOutput.printOutputToConsole(10);
+				jobs[j].setRowsReturnedCount(dqQueryRunOutput.getRows().size());
+				System.out.println("Writing Job Data output to CSV, Status : " + Utils.writeOutputToCSV(dqQueryRunOutput) + "\n");
+			}
 			
-			
-			selectOutput = QueryRunner.executeQueryWithParams(jobs[j]);			
-			selectOutput.printOutputToConsole(10);
-
 			System.out.println("Job executed on :" + (new SimpleDateFormat(AppParams.DB_JOB_EXECUTION_DATE_FORMAT).format(jobs[j].getExecutionDate())) + 
-					" ; Execution time in Sec : " + jobs[j].getExecutionTimeInSec() + "\n");
-			System.out.println("Writing Job Data output to CSV, Status : " + Utils.writeOutputToCSV(selectOutput) + "\n");
+					" ; Execution time in Sec : " + jobs[j].getExecutionTimeInSec() + "\n");			
 			System.out.println("Job execution status wirting to CSV, Status : " + Utils.updateSuiteExecutionCSVReport(jobs[j]) + "\n");
-			
-			
 			
 			
 			System.out.println(">>>END Job#" + (j +1) + "\n");

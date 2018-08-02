@@ -279,6 +279,14 @@ public class Utils {
 		sb.append(job.getExecutionTimeInSec());
 		sb.append(",");
 		sb.append(job.getStatus());
+		sb.append(",");
+		//result output dimensions in format "columns x rows"
+		sb.append(job.getHeaderKeys().size());
+		sb.append(" x ");
+		sb.append(job.getRowsReturnedCount());
+		sb.append(",");
+		
+		sb.append(job.getErrorShortText().replace(",", AppParams.QUERY_OUTPUT_ROW_COMMA_SYMBOL_IN_TEXT_REPLACEMENT));
 		
 		return sb.toString();
 	}
