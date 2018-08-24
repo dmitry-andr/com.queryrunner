@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.queryrunner.db.tester.DataTest;
 import com.queryrunner.db.tester.utils.AppParams;
+import com.queryrunner.db.tester.utils.Utils;
 
 public class QueryRunner {
 	
@@ -52,7 +53,7 @@ public class QueryRunner {
 			}			
 		}catch (Exception e) {
 			dbJob.setStatus(-2);
-			dbJob.setErrorShortText(e.getMessage());
+			dbJob.setErrorShortText(Utils.trimErrMessage(e.getMessage(), AppParams.LENGTH_ERR_MSG_CSV_OUTPUT));
 			e.printStackTrace();
 		}finally {
 			if(connection != null) {
@@ -60,7 +61,7 @@ public class QueryRunner {
 					connection.close();
 				} catch (SQLException e) {
 					dbJob.setStatus(-3);
-					dbJob.setErrorShortText(e.getMessage());
+					dbJob.setErrorShortText(Utils.trimErrMessage(e.getMessage(), AppParams.LENGTH_ERR_MSG_CSV_OUTPUT));
 					e.printStackTrace();
 				}
 			}

@@ -2,6 +2,8 @@ package com.queryrunner.db.tester;
 
 import com.queryrunner.db.processor.QueryRunner;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 
 import com.queryrunner.db.processor.DBQueryOutput;
@@ -12,7 +14,7 @@ public class DBTesterProgram {
 
 	public static void main(String[] args) {
 
-		System.out.println("Data extraction utility launched");
+		System.out.println("Data extraction utility launched - " + AppParams.APP_VERSION);
 		System.out.println("********************************************************\n");
 		
 		
@@ -30,8 +32,25 @@ public class DBTesterProgram {
 			for(int k = 0; k < jobFilesInSuite.length; k++) {
 				System.out.println(jobFilesInSuite[k]);
 				jobs[k] = Utils.readDBJob(jobFilesInSuite[k]);
+				
+				int countDynamicParamsInQuery = Utils.countSubstring("?", jobs[k].getQuery());
+				if((jobs[k].getQueryParams() != null) && (countDynamicParamsInQuery != jobs[k].getQueryParams().size())) {
+					System.out.println("[WARNING !!!] : Number of paramaters in Query and in Prams list doesn't match in Job -" + jobs[k].getId());
+					//Ask user if to proceed
+					try {
+						BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+						System.out.print("Are you sure to proceed? (yes/no) : ");
+		                String answer = br.readLine();
+		                if ("no".equalsIgnoreCase(answer)) {
+		                    System.out.println("Run terminated - Fix configurations and run again :)");
+		                    System.exit(0);
+		                }
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
-			
+
 		}else {
 			System.out.println("[ERROR] : NO files in suite!!!!!");
 		}
@@ -60,8 +79,9 @@ public class DBTesterProgram {
 		
 		
 		
-		
 		System.out.println("***Completed***");
 	}
+	
+	
 
 }

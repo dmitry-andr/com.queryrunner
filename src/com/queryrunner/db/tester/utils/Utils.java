@@ -120,7 +120,7 @@ public class Utils {
 			ArrayList<String> jobQueryParams = null;
 			if((jobConfigurationQueryParams != null) && (jobConfigurationQueryParams.length() > 0)) {
 				jobQueryParams = new ArrayList<String>();
-				String[] queryParams = jobConfigurationQueryParams.split(",");
+				String[] queryParams = jobConfigurationQueryParams.split(AppParams.SQL_PRAMS_VALUES_SPERATOR);
 				for(String queryParam : queryParams) {
 					jobQueryParams.add(queryParam.trim());
 				}
@@ -267,7 +267,7 @@ public class Utils {
 			for(int i = 0; i < job.getQueryParams().size(); i++) {
 				sb.append(job.getQueryParams().get(i));
 				if(i < (job.getQueryParams().size() - 1)) {
-					sb.append(AppParams.EXECUTION_REPORT_CSV_SQL_PRAMS_VALUES_SPERATOR);
+					sb.append(AppParams.SQL_PRAMS_VALUES_SPERATOR);
 				}
 			}
 		}else {
@@ -289,6 +289,28 @@ public class Utils {
 		sb.append(job.getErrorShortText().replace(",", AppParams.QUERY_OUTPUT_ROW_COMMA_SYMBOL_IN_TEXT_REPLACEMENT));
 		
 		return sb.toString();
+	}
+	
+	public static int countSubstring(String subStr, String str) {
+
+	    int count = 0;
+	    for (int i = 0; i < str.length(); i++) {
+	        if (str.substring(i).startsWith(subStr)) {
+	            count++;
+	        }
+	    }
+	    return count;
+	}
+	
+	public static String trimErrMessage(String message, int maxLength) {
+		if(message != null) {
+			if (message.length() <= maxLength ) {
+				return message;
+			}else {
+				return message.substring(0,maxLength);
+			}			
+		}
+		return null;
 	}
 	
 }

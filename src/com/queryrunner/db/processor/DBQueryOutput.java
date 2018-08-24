@@ -22,7 +22,6 @@ public class DBQueryOutput {
 	}
 	
 	
-	
 	public void printOutputToConsole(int limit) {
 		System.out.println("\n>>>DB query output");
 		System.out.println("Output records number : " + this.rows.size());
@@ -46,7 +45,6 @@ public class DBQueryOutput {
 		    }
 		}
 		System.out.println("*********************************************");
-		
 	}
 	
 	public void addRow(String commaSepratedRowValues) {
@@ -63,7 +61,4 @@ public class DBQueryOutput {
 	public String getJobId() {
 		return jobId;
 	}
-	
-	
-	
 }

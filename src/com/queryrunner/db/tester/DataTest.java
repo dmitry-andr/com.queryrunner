@@ -16,7 +16,6 @@ public class DataTest {
 	private String errorShortText = "";
 	
 	
-	
 	public DataTest(String id, String query, ArrayList<String> queryParams, ArrayList<String> headerKeys) {
 		super();
 		this.id = id;
@@ -54,80 +53,64 @@ public class DataTest {
 		}else {
 			output.append("[ERROR] : No header - Check config file for this JOB !!!!!");
 		}
-		
-				
+			
 		return output.toString();
 	}
-
 
 	public Date getExecutionDate() {
 		return executionDate;
 	}
 
-
 	public void setExecutionDate(Date executionDate) {
 		this.executionDate = executionDate;
 	}
-
 
 	public long getExecutionTimeInSec() {
 		return executionTimeInSec;
 	}
 
-
 	public void setExecutionTimeInSec(long executionTimeInSec) {
 		this.executionTimeInSec = executionTimeInSec;
 	}
-
 
 	public String getId() {
 		return id;
 	}
 
-
 	public String getQuery() {
 		return query;
 	}
-
 
 	public ArrayList<String> getQueryParams() {
 		return queryParams;
 	}
 
-
 	public ArrayList<String> getHeaderKeys() {
 		return headerKeys;
 	}
-
 
 	public int getStatus() {
 		return status;
 	}
 
-
 	public void setStatus(int status) {
 		this.status = status;
 	}
-
 
 	public int getRowsReturnedCount() {
 		return rowsReturnedCount;
 	}
 
-
 	public void setRowsReturnedCount(int rowsReturnedCount) {
 		this.rowsReturnedCount = rowsReturnedCount;
 	}
-
 
 	public String getErrorShortText() {
 		return errorShortText;
 	}
 
-
 	public void setErrorShortText(String errorShortText) {
 		this.errorShortText = errorShortText;
 	}
-	
-	
+		
 }
